@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="camara">Camara</string>
+    <string name="galeria">Galeria</string>
+    <string name="take_picture">Take Picture</string>
+    <string name="open_gallery">Open Gallery</string>
+    <string name="todo">TODO</string>
+    <string name="textview">TextView</string>
+    <string name="ra_button" />
+    <string name="ra">RA</string>
+    <string name="track">Track</string>
+    <string name="stop">Stop</string>
+    <string name="tracking">Tracking...</string>
+    <string name="label">label</string>
+    <string name="scan_available">scan_available</string>
+    <string name="clear">clear</string>
+    <string name="use_cloud_ml">use_cloud_ml</string>
+    <string name="scan">scan</string>
+</resources>
