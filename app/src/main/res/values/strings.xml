@@ -17,4 +17,6 @@
     <string name="use_cloud_ml">use_cloud_ml</string>
     <string name="scan_busy">Scanning…</string>
     <string name="scan">scan</string>
+    <string name="google_map_api_key"></string>
+    <string name="places">Places</string>
 </resources>

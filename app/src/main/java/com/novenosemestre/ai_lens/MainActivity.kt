@@ -17,6 +17,7 @@ import com.google.ar.core.ArCoreApk
 import com.novenosemestre.ai_lens.ImageHandler.ImageHandler
 import com.novenosemestre.ai_lens.ImageSearchHandler.ImageSearchHandler
 import com.novenosemestre.ai_lens.ImageSearchHandler.ResultAdapter
+import com.novenosemestre.ai_lens.PlacesMaps.PlacesMapsActivity
 import com.novenosemestre.ai_lens.RA_Objects2.MainActivity2
 
 class MainActivity : AppCompatActivity() {
@@ -62,6 +63,12 @@ class MainActivity : AppCompatActivity() {
         val buttonRA = findViewById<Button>(R.id.button_ra)
         buttonRA.setOnClickListener {
             val intent = Intent(this, MainActivity2::class.java)
+            startActivity(intent)
+        }
+
+        val buttonMaps = findViewById<Button>(R.id.button_maps)
+        buttonMaps.setOnClickListener {
+            val intent = Intent(this, PlacesMapsActivity::class.java)
             startActivity(intent)
         }
 

@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin") version "2.0.0"
 }
 
 android {
@@ -109,8 +110,8 @@ dependencies {
     implementation("org.tensorflow:tensorflow-lite:2.10.0")
 
     //Augmented Reality
-    /*implementation("com.google.ar.sceneform.ux:sceneform-ux:1.17.1")
-    implementation("com.google.ar.sceneform:core:1.17.1")*/
+    //implementation("com.google.ar.sceneform.ux:sceneform-ux:1.17.1")
+   // implementation("com.google.ar.sceneform:core:1.17.1")
 
     implementation("com.google.mlkit:object-detection:17.0.1")
     implementation("com.google.mlkit:object-detection-custom:17.0.1")
@@ -143,5 +144,19 @@ dependencies {
     implementation("io.grpc:grpc-api:1.42.0")*/
     implementation("io.grpc:grpc-okhttp:1.64.0")
     implementation("io.grpc:grpc-stub:1.64.0")
+
+    //google maps
+    implementation("com.google.android.gms:play-services-location:17.0.0")
+    implementation("com.google.android.gms:play-services-maps:17.0.0")
+    implementation("com.google.maps.android:maps-utils-ktx:0.2")
+    implementation("com.google.android.gms:play-services-places:17.0.0")
+    implementation("com.google.maps.android:maps-utils-ktx:0.2")
+
+
+    //retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.7.1")
+    implementation("com.squareup.retrofit2:converter-gson:2.7.1")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.9.3")
+    implementation("com.squareup.okhttp3:okhttp:4.9.3")
 
 }
