@@ -11,7 +11,7 @@ AI Lens is a mobile application designed to:
 - **Augmented Reality (AR)**: Shows the name of the detected objects in the real-time view.
 - **Google Maps**: Integrate maps to show the user's location and provide a contextualized AR experience.
 
-  ![ai-lens](images/diagrama.png)
+ <img src="images/ai-lens.png" alt="ai-lens" width="200"/>
 
 ## Main Features
 
