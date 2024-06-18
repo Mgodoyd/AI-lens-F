@@ -1,23 +1,27 @@
-# Aplicación de Inteligencia Artificial - AI Lens
+# Artificial Intelligence Application - AI Lens
 
-Esta aplicación utiliza la inteligencia artificial para mejorar la experiencia del usuario con funcionalidades avanzadas. A continuación, se detallan las principales características y tecnologías utilizadas.
+This application leverages artificial intelligence to enhance the user experience with advanced functionalities. Below, we detail the main features and technologies utilized.
 
-## Descripción General
+## General description
 
-AI Lens es una aplicación móvil diseñada para:
+AI Lens is a mobile application designed to:
 
-- **Detectar objetos en imágenes**: Utiliza modelos de aprendizaje automático para identificar y clasificar objetos.
-- **Realizar búsquedas de productos**: Basado en la detección de objetos, la aplicación permite buscar productos similares en línea.
-- **Realidad Aumentada (AR)**: Muestra el nombre de los objetos detectados en la vista en tiempo real.
-- **Google Maps**: Integra mapas para mostrar la ubicación del usuario y proporcionar una experiencia de AR contextualizada.
+- **Detect objects in images**: Use machine learning models to identify and classify objects.
+- **Perform product searches**: Based on object detection, the application allows you to search for similar products online.
+- **Augmented Reality (AR)**: Shows the name of the detected objects in the real-time view.
+- **Google Maps**: Integrate maps to show the user's location and provide a contextualized AR experience.
 
-## Funcionalidades Principales
+  ![ai-lens](images/diagrama.png)
 
-### 2.1 Detección de Objetos en Imágenes
+## Main Features
 
-- **Carga de imágenes**: Permite al usuario cargar una imagen de la galería para la detección de objetos.
-- **Captura de fotos**: Permite al usuario tomar una foto utilizando la cámara para detectar objetos en tiempo real.
+### 2.1 Object Detection in Images
 
+- **Image upload**: Allows the user to upload an image from the gallery for object detection.
+- **Photo capture**: Allows the user to take a photo using the camera to detect objects in real time.
+
+
+  
 ### 2.2 Búsqueda de Productos
 
 - **Resultados basados en objetos**: Utiliza la detección de objetos para sugerir productos similares a los identificados.
