@@ -1,18 +1,3 @@
-/*
- * Copyright 2021 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.novenosemestre.ai_lens.RA_Objects2.ml.common.samplerender;
 
 import android.opengl.GLES30;
@@ -33,6 +18,20 @@ class GpuBuffer {
   private int size;
   private int capacity;
 
+   /**
+   * Constructor for the GpuBuffer class.
+   * Initializes the GPU buffer with the given target, number of bytes per entry, and entries.
+   * If the entries buffer is not null, it must be a direct buffer and its limit must not be 0.
+   * If the entries buffer is null or its limit is 0, the size and capacity of the GPU buffer are set to 0.
+   * Otherwise, the size and capacity of the GPU buffer are set to the limit of the entries buffer.
+   * The GPU buffer is then populated with the entries buffer.
+   *
+   * @param target The target of the GPU buffer.
+   * @param numberOfBytesPerEntry The number of bytes per entry in the GPU buffer.
+   * @param entries The entries to populate the GPU buffer with.
+   * @throws IllegalArgumentException If the entries buffer is not null and it is not a direct buffer.
+   * @throws "GLException" If an OpenGL error occurs while initializing the GPU buffer.
+   */
   public GpuBuffer(int target, int numberOfBytesPerEntry, Buffer entries) {
     if (entries != null) {
       if (!entries.isDirect()) {
@@ -76,6 +75,18 @@ class GpuBuffer {
     }
   }
 
+  /**
+   * Sets the entries of the GPU buffer.
+   * If the entries buffer is null or its limit is 0, the size of the GPU buffer is set to 0.
+   * Otherwise, the entries buffer must be a direct buffer.
+   * If the limit of the entries buffer is less than or equal to the capacity of the GPU buffer,
+   * the entries buffer is used to update the existing data in the GPU buffer and the size of the GPU buffer is set to the limit of the entries buffer.
+   * Otherwise, the entries buffer is used to populate the GPU buffer and the size and capacity of the GPU buffer are set to the limit of the entries buffer.
+   *
+   * @param entries The entries to set in the GPU buffer.
+   * @throws IllegalArgumentException If the entries buffer is not null and it is not a direct buffer.
+   * @throws "GLException" If an OpenGL error occurs while setting the entries of the GPU buffer.
+   */
   public void set(Buffer entries) {
     if (entries == null || entries.limit() == 0) {
       size = 0;
@@ -102,6 +113,11 @@ class GpuBuffer {
     }
   }
 
+  /**
+   * Frees the GPU buffer.
+   * If the GPU buffer is not already freed, it deletes the buffer from OpenGL and logs any errors.
+   * After deletion, the buffer ID is reset to 0.
+   */
   public void free() {
     if (bufferId[0] != 0) {
       GLES30.glDeleteBuffers(1, bufferId, 0);
@@ -110,10 +126,22 @@ class GpuBuffer {
     }
   }
 
+   /**
+   * Returns the ID of the GPU buffer.
+   * This method is package-private, meaning it can only be accessed within the same package.
+   *
+   * @return The ID of the GPU buffer.
+   */
   public int getBufferId() {
     return bufferId[0];
   }
 
+  /**
+   * Returns the size of the GPU buffer.
+   * This method is package-private, meaning it can only be accessed within the same package.
+   *
+   * @return The size of the GPU buffer.
+   */
   public int getSize() {
     return size;
   }

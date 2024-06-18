@@ -1,19 +1,3 @@
-/*
- * Copyright 2021 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.google.ar.core.examples.java.ml
 
 import android.app.Activity
@@ -37,6 +21,16 @@ class ARCoreSessionLifecycleHelper(
 
   var beforeSessionResume: ((Session) -> Unit)? = null
 
+  /**
+   * Tries to create a new ARCore session.
+   *
+   * This function requests the installation of ARCore if it's not installed yet.
+   * If the installation is requested, it sets the installRequested flag to true and returns null.
+   * If ARCore is already installed, it tries to create a new session with the specified features.
+   * If the session creation fails, it invokes the exception callback and returns null.
+   *
+   * @return The created session, or null if the session couldn't be created.
+   */
   fun tryCreateSession(): Session? {
     when (ArCoreApk.getInstance().requestInstall(activity, !installRequested)!!) {
       ArCoreApk.InstallStatus.INSTALL_REQUESTED -> {
@@ -55,6 +49,16 @@ class ARCoreSessionLifecycleHelper(
     }
   }
 
+  /**
+   * Called when the activity is resumed.
+   *
+   * This function checks if the camera permission is granted.
+   * If the permission is not granted, it requests the permission and returns.
+   * If the permission is granted, it tries to create a new session and resumes it.
+   * It also sets the session cache to the created session.
+   *
+   * @param owner The LifecycleOwner whose lifecycle is being observed.
+   */
   override fun onResume(owner: LifecycleOwner) {
     if (!CameraPermissionHelper.hasCameraPermission(activity)) {
       CameraPermissionHelper.requestCameraPermission(activity)
@@ -71,15 +75,38 @@ class ARCoreSessionLifecycleHelper(
     }
   }
 
+  /**
+   * Called when the activity is paused.
+   * It pauses the session in the session cache.
+   *
+   * @param owner The LifecycleOwner whose lifecycle is being observed.
+   */
   override fun onPause(owner: LifecycleOwner) {
     sessionCache?.pause()
   }
 
+  /**
+   * Called when the activity is destroyed.
+   * It closes the session in the session cache and sets the session cache to null.
+   *
+   * @param owner The LifecycleOwner whose lifecycle is being observed.
+   */
   override fun onDestroy(owner: LifecycleOwner) {
     sessionCache?.close()
     sessionCache = null
   }
 
+  /**
+   * Handles the result of the permission request.
+   *
+   * This function checks if the camera permission is granted.
+   * If the permission is not granted, it shows a toast message and finishes the activity.
+   * If the user has chosen not to be asked again for the permission, it launches the permission settings.
+   *
+   * @param requestCode The request code passed in requestPermissions().
+   * @param permissions The requested permissions.
+   * @param grantResults The grant results for the corresponding permissions.
+   */
   fun onRequestPermissionsResult(
     requestCode: Int,
     permissions: Array<out String>,

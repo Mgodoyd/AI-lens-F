@@ -1,19 +1,3 @@
-/*
- * Copyright 2021 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.google.ar.core.examples.java.ml
 
 import android.opengl.GLSurfaceView
@@ -40,16 +24,41 @@ class MainActivityView(val activity: MainActivity2, renderer: AppRenderer) : Def
     setMaxLines(6)
   }
 
+  /**
+   * Called when the activity is resumed.
+   * It resumes the GLSurfaceView.
+   *
+   * @param owner The LifecycleOwner whose lifecycle is being observed.
+   */
   override fun onResume(owner: LifecycleOwner) {
     surfaceView.onResume()
   }
 
+  /**
+   * Called when the activity is paused.
+   * It pauses the GLSurfaceView.
+   *
+   * @param owner The LifecycleOwner whose lifecycle is being observed.
+   */
   override fun onPause(owner: LifecycleOwner) {
     surfaceView.onPause()
   }
 
+  /**
+   * Posts a Runnable to the view's message queue.
+   * The Runnable will be run on the user interface thread.
+   *
+   * @param action The Runnable to be added to the message queue.
+   */
   fun post(action: Runnable) = root.post(action)
 
+  /**
+   * Sets the scanning state of the application.
+   * If the state is active, it disables the scan button and changes its text to "Scanning...".
+   * If the state is not active, it enables the scan button and changes its text to "Scan".
+   *
+   * @param active The scanning state.
+   */
   fun setScanningActive(active: Boolean) = when(active) {
     true -> {
       scanButton.isEnabled = false

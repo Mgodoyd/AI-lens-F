@@ -11,7 +11,7 @@ class ArDisplayFragmentActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main2)
 
      /*   val fragment = ArDisplayFragment()
-        supportFragmentManager.beginTransaction()
+          supportFragmentManager.beginTransaction()
             .replace(R.id.arDisplayFragment, fragment)
             .commit()*/
     }

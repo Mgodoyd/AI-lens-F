@@ -1,18 +1,3 @@
-/*
- * Copyright 2021 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.novenosemestre.ai_lens.RA_Objects2.ml.common.samplerender;
 
 import android.opengl.GLES30;
@@ -90,14 +75,25 @@ public class Framebuffer implements Closeable {
     }
   }
 
+   /**
+   * Closes the Framebuffer and releases its resources.
+   * If the framebuffer is not already closed, it deletes the framebuffer from OpenGL and logs any errors.
+   * It then closes the color and depth textures associated with this framebuffer.
+   */
   @Override
   public void close() {
+    // Check if the framebuffer is not already closed
     if (framebufferId[0] != 0) {
+      // Delete the framebuffer from OpenGL
       GLES30.glDeleteFramebuffers(1, framebufferId, 0);
+      // Log any errors that occurred while deleting the framebuffer
       GLError.maybeLogGLError(Log.WARN, TAG, "Failed to free framebuffer", "glDeleteFramebuffers");
+      // Mark the framebuffer as closed
       framebufferId[0] = 0;
     }
+    // Close the color texture
     colorTexture.close();
+    // Close the depth texture
     depthTexture.close();
   }
 
@@ -139,22 +135,48 @@ public class Framebuffer implements Closeable {
     GLError.maybeThrowGLException("Failed to specify depth texture format", "glTexImage2D");
   }
 
+  /**
+   * Returns the color texture associated with this framebuffer.
+   *
+   * @return The color texture.
+   */
   public Texture getColorTexture() {
     return colorTexture;
   }
 
+  /**
+   * Returns the depth texture associated with this framebuffer.
+   *
+   * @return The depth texture.
+   */
   public Texture getDepthTexture() {
     return depthTexture;
   }
 
+  /**
+   * Returns the width of the framebuffer.
+   *
+   * @return The width of the framebuffer.
+   */
   public int getWidth() {
     return width;
   }
 
+  /**
+   * Returns the height of the framebuffer.
+   *
+   * @return The height of the framebuffer.
+   */
   public int getHeight() {
     return height;
   }
 
+  /**
+   * Returns the ID of the framebuffer.
+   * This method is package-private, meaning it can only be accessed within the same package.
+   *
+   * @return The ID of the framebuffer.
+   */
   /* package-private */
   int getFramebufferId() {
     return framebufferId[0];

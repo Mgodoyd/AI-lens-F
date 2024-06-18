@@ -1,18 +1,3 @@
-/*
- * Copyright 2021 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.novenosemestre.ai_lens.RA_Objects2.ml.common.samplerender.arcore;
 
 import android.media.Image;
@@ -40,38 +25,59 @@ public class BackgroundRenderer {
   private static final FloatBuffer VIRTUAL_SCENE_TEX_COORDS_BUFFER =
       ByteBuffer.allocateDirect(COORDS_BUFFER_SIZE).order(ByteOrder.nativeOrder()).asFloatBuffer();
 
-  static {
-    NDC_QUAD_COORDS_BUFFER.put(
-        new float[] {
-          /*0:*/ -1f, -1f, /*1:*/ +1f, -1f, /*2:*/ -1f, +1f, /*3:*/ +1f, +1f,
-        });
-    VIRTUAL_SCENE_TEX_COORDS_BUFFER.put(
-        new float[] {
-          /*0:*/ 0f, 0f, /*1:*/ 1f, 0f, /*2:*/ 0f, 1f, /*3:*/ 1f, 1f,
-        });
-  }
+  // Static block to initialize NDC_QUAD_COORDS_BUFFER and VIRTUAL_SCENE_TEX_COORDS_BUFFER
+static {
+  // NDC_QUAD_COORDS_BUFFER is used to store normalized device coordinates for a quad.
+  NDC_QUAD_COORDS_BUFFER.put(
+      new float[] {
+        /*0:*/ -1f, -1f, /*1:*/ +1f, -1f, /*2:*/ -1f, +1f, /*3:*/ +1f, +1f,
+      });
+  // VIRTUAL_SCENE_TEX_COORDS_BUFFER is used to store texture coordinates for a quad.
+  VIRTUAL_SCENE_TEX_COORDS_BUFFER.put(
+      new float[] {
+        /*0:*/ 0f, 0f, /*1:*/ 1f, 0f, /*2:*/ 0f, 1f, /*3:*/ 1f, 1f,
+      });
+}
 
-  private final FloatBuffer cameraTexCoords =
-      ByteBuffer.allocateDirect(COORDS_BUFFER_SIZE).order(ByteOrder.nativeOrder()).asFloatBuffer();
+// Buffer to store camera texture coordinates
+private final FloatBuffer cameraTexCoords =
+    ByteBuffer.allocateDirect(COORDS_BUFFER_SIZE).order(ByteOrder.nativeOrder()).asFloatBuffer();
 
-  private final Mesh mesh;
-  private final VertexBuffer cameraTexCoordsVertexBuffer;
-  private Shader backgroundShader;
-  private Shader occlusionShader;
-  private final Texture cameraDepthTexture;
-  private final Texture cameraColorTexture;
+// Mesh object to hold vertex data for rendering
+private final Mesh mesh;
+// VertexBuffer to hold camera texture coordinates
+private final VertexBuffer cameraTexCoordsVertexBuffer;
+// Shader for rendering the background
+private Shader backgroundShader;
+// Shader for rendering occlusion
+private Shader occlusionShader;
+// Texture for camera depth data
+private final Texture cameraDepthTexture;
+// Texture for camera color data
+private final Texture cameraColorTexture;
 
-  private boolean useDepthVisualization;
-  private boolean useOcclusion;
-  private float aspectRatio;
+// Flag to indicate whether depth visualization is used
+private boolean useDepthVisualization;
+// Flag to indicate whether occlusion is used
+private boolean useOcclusion;
+// Aspect ratio of the camera
+private float aspectRatio;
 
+  /**
+   * Constructor for BackgroundRenderer.
+   * Initializes textures, vertex buffers and mesh.
+   *
+   * @param render The SampleRender object used for rendering.
+   */
   public BackgroundRenderer(SampleRender render) {
+    // Initialize camera color texture
     cameraColorTexture =
         new Texture(
             render,
             Texture.Target.TEXTURE_EXTERNAL_OES,
             Texture.WrapMode.CLAMP_TO_EDGE,
             /*useMipmaps=*/ false);
+    // Initialize camera depth texture
     cameraDepthTexture =
         new Texture(
             render,
@@ -94,6 +100,15 @@ public class BackgroundRenderer {
     mesh =
         new Mesh(render, Mesh.PrimitiveMode.TRIANGLE_STRIP, /*indexBuffer=*/ null, vertexBuffers);
   }
+
+  /**
+   * Sets whether to use depth visualization.
+   * If the flag is changed, the background shader is recreated.
+   *
+   * @param render The SampleRender object used for rendering.
+   * @param useDepthVisualization The flag indicating whether to use depth visualization.
+   * @throws IOException If an error occurs while creating the shader.
+   */
   public void setUseDepthVisualization(SampleRender render, boolean useDepthVisualization)
       throws IOException {
     if (backgroundShader != null) {
@@ -108,7 +123,7 @@ public class BackgroundRenderer {
       backgroundShader =
           Shader.createFromAssets(
                   render,
-                  "shaders/background_show_depth_color_visualization.vert",
+                  "shaders/background_show_depth_color_visualization.vert",  // path assets/shaders
                   "shaders/background_show_depth_color_visualization.frag",
                   /*defines=*/ null)
               .setTexture("u_CameraDepthTexture", cameraDepthTexture)
@@ -126,6 +141,14 @@ public class BackgroundRenderer {
               .setDepthWrite(false);
     }
   }
+
+  /**
+   * Updates the display geometry if it has changed.
+   * Transforms the coordinates from normalized device coordinates to texture normalized coordinates.
+   * Sets the camera texture coordinates vertex buffer with the transformed coordinates.
+   *
+   * @param frame The AR frame for which to update the display geometry.
+   */
   public void updateDisplayGeometry(Frame frame) {
     if (frame.hasDisplayGeometryChanged()) {
       frame.transformCoordinates2d(
@@ -137,6 +160,13 @@ public class BackgroundRenderer {
     }
   }
 
+  /**
+   * Updates the camera depth texture with the given image.
+   * Binds the texture to GL_TEXTURE_2D and sets the texture image to the given image.
+   * If occlusion is used, it calculates the aspect ratio of the image and sets it in the occlusion shader.
+   *
+   * @param image The image to update the camera depth texture with.
+   */
   public void updateCameraDepthTexture(Image image) {
     GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, cameraDepthTexture.getTextureId());
     GLES30.glTexImage2D(
@@ -154,10 +184,25 @@ public class BackgroundRenderer {
       occlusionShader.setFloat("u_DepthAspectRatio", aspectRatio);
     }
   }
+
+  /**
+   * Draws the background using the background shader.
+   *
+   * @param render The SampleRender object used for rendering.
+   */
   public void drawBackground(SampleRender render) {
     render.draw(mesh, backgroundShader);
   }
 
+  /**
+   * Draws the virtual scene using the occlusion shader.
+   * Sets the virtual scene color texture and, if occlusion is used, the virtual scene depth texture, zNear and zFar in the occlusion shader.
+   *
+   * @param render The SampleRender object used for rendering.
+   * @param virtualSceneFramebuffer The framebuffer of the virtual scene.
+   * @param zNear The near clipping plane distance.
+   * @param zFar The far clipping plane distance.
+   */
   public void drawVirtualScene(
       SampleRender render, Framebuffer virtualSceneFramebuffer, float zNear, float zFar) {
     occlusionShader.setTexture(
@@ -170,10 +215,21 @@ public class BackgroundRenderer {
     }
     render.draw(mesh, occlusionShader);
   }
+
+  /**
+   * Returns the camera color texture.
+   *
+   * @return The camera color texture.
+   */
   public Texture getCameraColorTexture() {
     return cameraColorTexture;
   }
 
+  /**
+   * Returns the camera depth texture.
+   *
+   * @return The camera depth texture.
+   */
   public Texture getCameraDepthTexture() {
     return cameraDepthTexture;
   }

@@ -1,19 +1,3 @@
-/*
- * Copyright 2021 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.google.ar.core.examples.java.ml.classification.utils
 
 import android.graphics.Bitmap
@@ -21,6 +5,13 @@ import android.graphics.Matrix
 import java.io.ByteArrayOutputStream
 
 object ImageUtils {
+  /**
+   * Rotates a bitmap by a specified angle.
+   *
+   * @param bitmap The bitmap to rotate.
+   * @param rotation The angle to rotate the bitmap by. This is measured in degrees.
+   * @return The rotated bitmap. If the rotation angle is 0, the original bitmap is returned.
+   */
   fun rotateBitmap(bitmap: Bitmap, rotation: Int): Bitmap {
     if (rotation == 0) return bitmap
 
@@ -29,6 +20,12 @@ object ImageUtils {
     return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, false)
   }
 
+  /**
+   * Converts a Bitmap to a ByteArray.
+   *
+   * @receiver The Bitmap to convert.
+   * @return The ByteArray representation of the Bitmap. The Bitmap is compressed as a JPEG with quality 100.
+   */
   fun Bitmap.toByteArray(): ByteArray = ByteArrayOutputStream().use { stream ->
     this.compress(Bitmap.CompressFormat.JPEG, 100, stream)
     stream.toByteArray()

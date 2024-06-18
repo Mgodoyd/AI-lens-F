@@ -1,18 +1,3 @@
-/*
- * Copyright 2021 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.google.ar.core.examples.java.ml
 
 import android.opengl.Matrix
@@ -65,36 +50,59 @@ class AppRenderer(val activity: MainActivity2) : DefaultLifecycleObserver, Sampl
 
   var currentAnalyzer: ObjectDetector = gcpAnalyzer
 
+ /**
+   * Called when the activity is resumed.
+   * It resumes the display rotation helper.
+   *
+   * @param owner The LifecycleOwner whose lifecycle is being observed.
+   */
   override fun onResume(owner: LifecycleOwner) {
     displayRotationHelper.onResume()
   }
 
+  /**
+   * Called when the activity is paused.
+   * It pauses the display rotation helper.
+   *
+   * @param owner The LifecycleOwner whose lifecycle is being observed.
+   */
   override fun onPause(owner: LifecycleOwner) {
     displayRotationHelper.onPause()
   }
 
+  /**
+   * Binds the view to the renderer.
+   * It sets up the click listeners for the scan button, the Cloud ML switch, and the reset button.
+   *
+   * @param view The MainActivityView to bind.
+   */
   fun bindView(view: MainActivityView) {
     this.view = view
 
+    // Set up the click listener for the scan button
     view.scanButton.setOnClickListener {
       scanButtonWasPressed = true
       view.setScanningActive(true)
       hideSnackbar()
     }
 
+    // Set up the checked change listener for the Cloud ML switch
     view.useCloudMlSwitch.setOnCheckedChangeListener { _, isChecked ->
       currentAnalyzer = if (isChecked) gcpAnalyzer else mlKitAnalyzer
     }
 
+    // Check if Google Cloud Vision is configured
     val gcpConfigured = gcpAnalyzer.credentials != null
     view.useCloudMlSwitch.isChecked = gcpConfigured
     view.useCloudMlSwitch.isEnabled = gcpConfigured
     currentAnalyzer = if (gcpConfigured) gcpAnalyzer else mlKitAnalyzer
 
+    // Show a snackbar if Google Cloud Vision isn't configured
     if (!gcpConfigured) {
       showSnackbar("Google Cloud Vision isn't configured (see README). The Cloud ML switch will be disabled.")
     }
 
+    // Set up the click listener for the reset button
     view.resetButton.setOnClickListener {
       arLabeledAnchors.clear()
       view.resetButton.isEnabled = false
@@ -102,6 +110,12 @@ class AppRenderer(val activity: MainActivity2) : DefaultLifecycleObserver, Sampl
     }
   }
 
+  /**
+   * Called when the surface is created.
+   * It initializes the background renderer, the point cloud renderer, and the label renderer.
+   *
+   * @param render The SampleRender object for rendering.
+   */
   override fun onSurfaceCreated(render: SampleRender) {
     backgroundRenderer = BackgroundRenderer(render).apply {
       setUseDepthVisualization(render, false)
@@ -110,18 +124,40 @@ class AppRenderer(val activity: MainActivity2) : DefaultLifecycleObserver, Sampl
     labelRenderer.onSurfaceCreated(render)
   }
 
+  /**
+   * Called when the surface is changed.
+   * It updates the display rotation helper.
+   *
+   * @param render The SampleRender object for rendering.
+   * @param width The new width of the surface.
+   * @param height The new height of the surface.
+   */
   override fun onSurfaceChanged(render: SampleRender?, width: Int, height: Int) {
     displayRotationHelper.onSurfaceChanged(width, height)
   }
 
+  // The results of the object detection
   var objectResults: List<DetectedObjectResult>? = null
 
+
+ /**
+  * Called for each frame to be rendered.
+  * It updates the session, draws the background, and performs object detection if the scan button was pressed.
+  * It also draws labels at the anchor positions of the detected objects.
+  *
+  * @param render The SampleRender object for rendering.
+  */
   override fun onDrawFrame(render: SampleRender) {
+    // Get the AR session or return if it's null
     val session = activity.arCoreSessionHelper.sessionCache ?: return
+
+    // Set the texture names for the camera
     session.setCameraTextureNames(intArrayOf(backgroundRenderer.cameraColorTexture.textureId))
 
+    // Update the session if needed based on the display rotation
     displayRotationHelper.updateSessionIfNeeded(session)
 
+    // Update the AR session and handle any exceptions
     val frame = try {
       session.update()
     } catch (e: CameraNotAvailableException) {
@@ -130,22 +166,27 @@ class AppRenderer(val activity: MainActivity2) : DefaultLifecycleObserver, Sampl
       return
     }
 
+    // Update the display geometry and draw the background
     backgroundRenderer.updateDisplayGeometry(frame)
     backgroundRenderer.drawBackground(render)
 
+    // Get the camera and calculate the view and projection matrices
     val camera = frame.camera
     camera.getViewMatrix(viewMatrix, 0)
     camera.getProjectionMatrix(projectionMatrix, 0, 0.01f, 100.0f)
     Matrix.multiplyMM(viewProjectionMatrix, 0, projectionMatrix, 0, viewMatrix, 0)
 
+    // If the camera is not tracking, return
     if (camera.trackingState != TrackingState.TRACKING) {
       return
     }
 
+    // Draw the point cloud
     frame.acquirePointCloud().use { pointCloud ->
       pointCloudRender.drawPointCloud(render, pointCloud, viewProjectionMatrix)
     }
 
+    // If the scan button was pressed, perform object detection
     if (scanButtonWasPressed) {
       scanButtonWasPressed = false
       val cameraImage = frame.tryAcquireCameraImage()
@@ -159,6 +200,7 @@ class AppRenderer(val activity: MainActivity2) : DefaultLifecycleObserver, Sampl
       }
     }
 
+    // If there are object detection results, process them
     val objects = objectResults
     if (objects != null) {
       objectResults = null

@@ -1,18 +1,3 @@
-/*
- * Copyright 2021 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.novenosemestre.ai_lens.RA_Objects2.ml.common.samplerender;
 
 import android.opengl.GLES30;
@@ -56,6 +41,22 @@ public class Mesh implements Closeable {
   private final IndexBuffer indexBuffer;
   private final VertexBuffer[] vertexBuffers;
 
+  /**
+   * Constructor for the Mesh class.
+   * Initializes the Mesh with the given primitive mode, index buffer, and array of vertex buffers.
+   * If the array of vertex buffers is null or empty, an IllegalArgumentException is thrown.
+   * A vertex array is then generated and bound.
+   * If the index buffer is not null, it is bound to the vertex array.
+   * Each vertex buffer in the array of vertex buffers is then bound to the vertex array and enabled.
+   * If an error occurs while initializing the Mesh, the Mesh is closed and the error is rethrown.
+   *
+   * @param render The SampleRender instance associated with this Mesh.
+   * @param primitiveMode The primitive mode of this Mesh.
+   * @param indexBuffer The index buffer of this Mesh.
+   * @param vertexBuffers The array of vertex buffers of this Mesh.
+   * @throws IllegalArgumentException If the array of vertex buffers is null or empty.
+   * @throws "GLException" If an OpenGL error occurs while initializing the Mesh.
+   */
   public Mesh(
       SampleRender render,
       PrimitiveMode primitiveMode,
@@ -100,6 +101,21 @@ public class Mesh implements Closeable {
     }
   }
 
+  /**
+   * Creates a Mesh from an asset file.
+   * The asset file is opened as an InputStream, which is then read into an Obj.
+   * The Obj is converted into a renderable format.
+   * The data from the Obj is obtained as direct buffers, including the vertex indices, local coordinates, texture coordinates, and normals.
+   * Vertex buffers are created for the local coordinates, texture coordinates, and normals.
+   * An index buffer is created for the vertex indices.
+   * A new Mesh is then created with the SampleRender instance, the primitive mode set to TRIANGLES, the index buffer, and the array of vertex buffers.
+   * The new Mesh is returned.
+   *
+   * @param render The SampleRender instance associated with this Mesh.
+   * @param assetFileName The name of the asset file to create the Mesh from.
+   * @return The new Mesh created from the asset file.
+   * @throws IOException If an I/O error occurs while reading the asset file.
+   */
   public static Mesh createFromAsset(SampleRender render, String assetFileName) throws IOException {
     try (InputStream inputStream = render.getAssets().open(assetFileName)) {
       Obj obj = ObjUtils.convertToRenderable(ObjReader.read(inputStream));
@@ -122,6 +138,10 @@ public class Mesh implements Closeable {
     }
   }
 
+  /**
+   * Closes the Mesh.
+   * If the vertex array ID is not 0, the vertex array is deleted and any errors are logged.
+   */
   @Override
   public void close() {
     if (vertexArrayId[0] != 0) {
@@ -131,6 +151,19 @@ public class Mesh implements Closeable {
     }
   }
 
+  /**
+   * Performs a low-level draw operation on the Mesh.
+   * If the vertex array ID is 0, an IllegalStateException is thrown.
+   * The vertex array is then bound.
+   * If the index buffer is null, a sanity check is performed to ensure that all vertex buffers have the same number of vertices.
+   * If any vertex buffers have a different number of vertices, an IllegalStateException is thrown.
+   * The vertex array is then drawn using the primitive mode and the number of vertices.
+   * If the index buffer is not null, the vertex array is drawn using the primitive mode, the size of the index buffer, and the UNSIGNED_INT type.
+   * If an OpenGL error occurs while performing the draw operation, a GLException is thrown.
+   *
+   * @throws IllegalStateException If the vertex array ID is 0 or if any vertex buffers have a different number of vertices.
+   * @throws "GLException" If an OpenGL error occurs while performing the draw operation.
+   */
   public void lowLevelDraw() {
     if (vertexArrayId[0] == 0) {
       throw new IllegalStateException("Tried to draw a freed Mesh");

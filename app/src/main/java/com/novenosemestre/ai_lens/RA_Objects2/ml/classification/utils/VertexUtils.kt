@@ -1,24 +1,16 @@
-/*
- * Copyright 2021 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.google.ar.core.examples.java.ml.classification.utils
 
 import com.google.cloud.vision.v1.NormalizedVertex
 
 object VertexUtils {
+  /**
+   * Converts the NormalizedVertex's coordinates from relative to absolute.
+   * The NormalizedVertex's x and y coordinates are multiplied by the image's width and height respectively.
+   *
+   * @param imageWidth The width of the image.
+   * @param imageHeight The height of the image.
+   * @return A pair of integers representing the absolute x and y coordinates.
+   */
   fun NormalizedVertex.toAbsoluteCoordinates(
     imageWidth: Int,
     imageHeight: Int,
@@ -26,6 +18,16 @@ object VertexUtils {
     return (x * imageWidth).toInt() to (y * imageHeight).toInt()
   }
 
+  /**
+   * Rotates the coordinates based on the image rotation.
+   * The rotation is applied in a clockwise direction.
+   *
+   * @param imageWidth The width of the image.
+   * @param imageHeight The height of the image.
+   * @param imageRotation The rotation of the image in degrees. This should be one of the following: 0, 90, 180, 270.
+   * @return A pair of integers representing the rotated x and y coordinates.
+   * @throws IllegalArgumentException If the imageRotation is not one of the following: 0, 90, 180, 270.
+   */
   fun Pair<Int, Int>.rotateCoordinates(
     imageWidth: Int,
     imageHeight: Int,
@@ -40,6 +42,13 @@ object VertexUtils {
       else -> error("Invalid imageRotation $imageRotation")
     }
   }
+
+  /**
+   * Calculates the average x and y coordinates of a list of NormalizedVertex.
+   * The average is calculated by summing up all the x and y coordinates and dividing by the size of the list.
+   *
+   * @return A NormalizedVertex representing the average x and y coordinates.
+   */
   fun List<NormalizedVertex>.calculateAverage(): NormalizedVertex {
     var averageX = 0f
     var averageY = 0f
@@ -49,5 +58,4 @@ object VertexUtils {
     }
     return NormalizedVertex.newBuilder().setX(averageX).setY(averageY).build()
   }
-
 }

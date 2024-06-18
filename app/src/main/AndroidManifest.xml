@@ -2,19 +2,19 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- permissions -->
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-
-    <uses-feature android:name="android.hardware.camera.ar" />
-
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="32"
         tools:ignore="ScopedStorage" />
 
+    <!-- features  -->
+    <uses-feature android:name="android.hardware.camera.ar" />
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
@@ -32,26 +32,35 @@
         android:theme="@style/Theme.AILens"
         android:enableOnBackInvokedCallback="true"
         tools:targetApi="tiramisu">
-        <meta-data android:name="com.google.ar.core" android:value="required" />
+        <meta-data android:name="com.google.ar.core" android:value="required" /> <!-- ARCore required -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_map_api_key" />
+            android:value="@string/google_map_api_key" />  <!-- Add your Google Maps API key here  values/strings/string.xml-->
+
+        <!-- MainActivity -->
         <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-       <activity
+        <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
+        <!-- IA Tensorflow Activity -->
         <activity android:name=".RA_Objects.TextureViewActivity" />
+
+        <!-- IA RA Vertex Activity -->
         <activity android:name=".RA_Objects2.MainActivity2"/>
-        <activity android:name=".PlacesMaps.PlacesMapsActivity"/>
+
+        <!-- Places Maps Activity -->
+        <activity android:name=".PlacesMaps.PlacesMapsActivity2"/>
+
+        <!-- AR Display Activity -->
         <activity
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:name=".RA_Objects.ArDisplayFragmentActivity" />
@@ -63,11 +72,7 @@
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
-            <meta-data  android:name="com.google.ar.core"
-                android:value="required"
-               />
         </provider>
     </application>
-
 
 </manifest>

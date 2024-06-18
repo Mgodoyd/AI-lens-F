@@ -1,18 +1,3 @@
-/*
- * Copyright 2021 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.novenosemestre.ai_lens.RA_Objects2.ml.common.helpers;
 
 import android.app.Activity;
@@ -42,7 +27,13 @@ public final class TrackingStateHelper {
     this.activity = activity;
   }
 
-  /** Keep the screen unlocked while tracking, but allow it to lock when tracking stops. */
+  /** Keep the screen unlocked while tracking, but allow it to lock when tracking stops.
+   * Updates the flag that keeps the screen on based on the current tracking state.
+   * If the tracking state is PAUSED or STOPPED, it clears the flag that keeps the screen on.
+   * If the tracking state is TRACKING, it adds the flag that keeps the screen on.
+   *
+   * @param trackingState The current tracking state.
+   */
   public void updateKeepScreenOnFlag(TrackingState trackingState) {
     if (trackingState == previousTrackingState) {
       return;
@@ -62,6 +53,13 @@ public final class TrackingStateHelper {
     }
   }
 
+  /**
+   * Returns a string describing the reason for tracking failure.
+   * The returned string depends on the tracking failure reason of the camera.
+   *
+   * @param camera The camera whose tracking failure reason is to be obtained.
+   * @return A string describing the reason for tracking failure.
+   */
   public static String getTrackingFailureReasonString(Camera camera) {
     TrackingFailureReason reason = camera.getTrackingFailureReason();
     switch (reason) {

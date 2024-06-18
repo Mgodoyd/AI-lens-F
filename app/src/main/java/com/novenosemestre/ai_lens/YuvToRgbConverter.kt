@@ -1,19 +1,3 @@
-/*
- * Copyright 2020 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     https://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.novenosemestre.ai_lens
 
 import android.content.Context
@@ -36,6 +20,18 @@ class YuvToRgbConverter(context: Context) {
   private lateinit var inputAllocation: Allocation
   private lateinit var outputAllocation: Allocation
 
+  /**
+   * Converts a YUV image to RGB and stores the result in a bitmap.
+   *
+   * This function first checks if the YUV buffer is initialized. If not, it calculates the pixel count
+   * and the pixel size in bits, and initializes the YUV buffer.
+   * Then, it converts the image to a byte array and stores the result in the YUV buffer.
+   * If the input and output allocations are not initialized, it creates them.
+   * Finally, it converts the NV21 format YUV image to RGB and stores the result in the output bitmap.
+   *
+   * @param image The YUV image to convert.
+   * @param output The bitmap to store the result.
+   */
   @Synchronized
   fun yuvToRgb(image: Image, output: Bitmap) {
 
@@ -62,6 +58,18 @@ class YuvToRgbConverter(context: Context) {
     outputAllocation.copyTo(output)
   }
 
+  /**
+   * Converts an image to a byte array and stores the result in a buffer.
+   *
+   * This function first asserts that the image format is YUV_420_888.
+   * Then, it iterates over the image planes and for each plane, it calculates the output stride and offset,
+   * gets the plane buffer, row stride, and pixel stride, and calculates the plane crop, width, and height.
+   * It also creates a row buffer and calculates the row length.
+   * Finally, it iterates over the rows and columns of the plane, and stores the result in the output buffer.
+   *
+   * @param image The image to convert.
+   * @param outputBuffer The buffer to store the result.
+   */
   private fun imageToByteArray(image: Image, outputBuffer: ByteArray) {
     assert(image.format == ImageFormat.YUV_420_888)
 

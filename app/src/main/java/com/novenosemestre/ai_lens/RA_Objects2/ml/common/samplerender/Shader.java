@@ -1,18 +1,3 @@
-/*
- * Copyright 2021 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.novenosemestre.ai_lens.RA_Objects2.ml.common.samplerender;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -75,6 +60,23 @@ public class Shader implements Closeable {
   private BlendFactor destAlphaBlend = BlendFactor.ZERO;
 
 
+   /**
+   * Constructor for the Shader class.
+   * Initializes the Shader with the given SampleRender instance, vertex shader code, fragment shader code, and map of defines.
+   * The map of defines is converted into a string of shader defines code.
+   * A vertex shader and a fragment shader are then created with the vertex shader code and fragment shader code, respectively, with the shader defines code inserted.
+   * A shader program is created and the vertex shader and fragment shader are attached to it.
+   * The shader program is then linked.
+   * If the link status is false, the shader program info log is retrieved and a GLException is thrown with the info log.
+   * If an error occurs while initializing the Shader, the Shader is closed and the error is rethrown.
+   * After the Shader is initialized, the vertex shader and fragment shader are flagged for deletion.
+   *
+   * @param render The SampleRender instance associated with this Shader.
+   * @param vertexShaderCode The vertex shader code for this Shader.
+   * @param fragmentShaderCode The fragment shader code for this Shader.
+   * @param defines The map of defines for this Shader.
+   * @throws GLException If a OpenGL error occurs while initializing the Shader.
+   */
   public Shader(
       SampleRender render,
       String vertexShaderCode,
@@ -124,7 +126,18 @@ public class Shader implements Closeable {
     }
   }
 
-
+   /**
+   * Creates a Shader from asset files.
+   * This method reads the vertex and fragment shader files from the assets, converts them to strings, and creates a new Shader with the SampleRender instance and the shader code.
+   * The map of defines is also passed to the Shader constructor.
+   *
+   * @param render The SampleRender instance associated with this Shader.
+   * @param vertexShaderFileName The name of the vertex shader file in the assets.
+   * @param fragmentShaderFileName The name of the fragment shader file in the assets.
+   * @param defines The map of defines for this Shader.
+   * @return The new Shader created from the asset files.
+   * @throws IOException If an I/O error occurs while reading the asset files.
+   */
   public static Shader createFromAssets(
       SampleRender render,
       String vertexShaderFileName,
@@ -139,6 +152,10 @@ public class Shader implements Closeable {
         defines);
   }
 
+  /**
+   * Closes the Shader.
+   * If the program ID is not 0, the shader program is deleted.
+   */
   @Override
   public void close() {
     if (programId != 0) {
@@ -147,17 +164,32 @@ public class Shader implements Closeable {
     }
   }
 
+  /**
+   * Sets the depth test flag for this Shader.
+   * @param depthTest The new depth test flag.
+   * @return This Shader, for chaining calls.
+   */
   public Shader setDepthTest(boolean depthTest) {
     this.depthTest = depthTest;
     return this;
   }
 
-
+  /**
+   * Sets the depth write flag for this Shader.
+   * @param depthWrite The new depth write flag.
+   * @return This Shader, for chaining calls.
+   */
   public Shader setDepthWrite(boolean depthWrite) {
     this.depthWrite = depthWrite;
     return this;
   }
 
+  /**
+   * Sets the blend factors for this Shader.
+   * @param sourceBlend The new source blend factor.
+   * @param destBlend The new destination blend factor.
+   * @return This Shader, for chaining calls.
+   */
   public Shader setBlend(BlendFactor sourceBlend, BlendFactor destBlend) {
     this.sourceRgbBlend = sourceBlend;
     this.destRgbBlend = destBlend;
@@ -166,6 +198,14 @@ public class Shader implements Closeable {
     return this;
   }
 
+  /**
+   * Sets the blend factors for this Shader.
+   * @param sourceRgbBlend The new source RGB blend factor.
+   * @param destRgbBlend The new destination RGB blend factor.
+   * @param sourceAlphaBlend The new source alpha blend factor.
+   * @param destAlphaBlend The new destination alpha blend factor.
+   * @return This Shader, for chaining calls.
+   */
   public Shader setBlend(
       BlendFactor sourceRgbBlend,
       BlendFactor destRgbBlend,
@@ -178,6 +218,13 @@ public class Shader implements Closeable {
     return this;
   }
 
+  /**
+   * Sets a texture uniform for this Shader.
+   * If replacing an existing texture uniform, the texture unit is reused.
+   * @param name The name of the uniform.
+   * @param texture The new Texture for the uniform.
+   * @return This Shader, for chaining calls.
+   */
   public Shader setTexture(String name, Texture texture) {
     // Special handling for Textures. If replacing an existing texture uniform, reuse the texture
     // unit.
@@ -194,27 +241,49 @@ public class Shader implements Closeable {
     return this;
   }
 
-
+  /**
+   * Sets a boolean uniform for this Shader.
+   * @param name The name of the uniform.
+   * @param v0 The new boolean value for the uniform.
+   * @return This Shader, for chaining calls.
+   */
   public Shader setBool(String name, boolean v0) {
     int[] values = {v0 ? 1 : 0};
     uniforms.put(getUniformLocation(name), new UniformInt(values));
     return this;
   }
 
-
+  /**
+   * Sets an integer uniform for this Shader.
+   * @param name The name of the uniform.
+   * @param v0 The new integer value for the uniform.
+   * @return This Shader, for chaining calls.
+   */
   public Shader setInt(String name, int v0) {
     int[] values = {v0};
     uniforms.put(getUniformLocation(name), new UniformInt(values));
     return this;
   }
 
+  /**
+   * Sets a float uniform for this Shader.
+   * @param name The name of the uniform.
+   * @param v0 The new float value for the uniform.
+   * @return This Shader, for chaining calls.
+   */
   public Shader setFloat(String name, float v0) {
     float[] values = {v0};
     uniforms.put(getUniformLocation(name), new Uniform1f(values));
     return this;
   }
 
-
+  /**
+   * Sets a 2D vector uniform for this Shader.
+   * @param name The name of the uniform.
+   * @param values The new 2D vector values for the uniform.
+   * @return This Shader, for chaining calls.
+   * @throws IllegalArgumentException If the length of the values array is not 2.
+   */
   public Shader setVec2(String name, float[] values) {
     if (values.length != 2) {
       throw new IllegalArgumentException("Value array length must be 2");
@@ -222,16 +291,22 @@ public class Shader implements Closeable {
     uniforms.put(getUniformLocation(name), new Uniform2f(values.clone()));
     return this;
   }
-
-  public Shader setVec3(String name, float[] values) {
-    if (values.length != 3) {
-      throw new IllegalArgumentException("Value array length must be 3");
+    public Shader setVec3(String name, float[] values) {
+      if (values.length != 3) {
+        throw new IllegalArgumentException("Value array length must be 3");
+      }
+      uniforms.put(getUniformLocation(name), new Uniform3f(values.clone()));
+      return this;
     }
-    uniforms.put(getUniformLocation(name), new Uniform3f(values.clone()));
-    return this;
-  }
 
 
+  /**
+   * Sets a 4D vector uniform for this Shader.
+   * @param name The name of the uniform.
+   * @param values The new 4D vector values for the uniform.
+   * @return This Shader, for chaining calls.
+   * @throws IllegalArgumentException If the length of the values array is not 4.
+   */
   public Shader setVec4(String name, float[] values) {
     if (values.length != 4) {
       throw new IllegalArgumentException("Value array length must be 4");
@@ -240,7 +315,13 @@ public class Shader implements Closeable {
     return this;
   }
 
-
+  /**
+   * Sets a 2x2 matrix uniform for this Shader.
+   * @param name The name of the uniform.
+   * @param values The new 2x2 matrix values for the uniform.
+   * @return This Shader, for chaining calls.
+   * @throws IllegalArgumentException If the length of the values array is not 4 (2x2).
+   */
   public Shader setMat2(String name, float[] values) {
     if (values.length != 4) {
       throw new IllegalArgumentException("Value array length must be 4 (2x2)");
@@ -249,7 +330,13 @@ public class Shader implements Closeable {
     return this;
   }
 
-
+  /**
+   * Sets a 3x3 matrix uniform for this Shader.
+   * @param name The name of the uniform.
+   * @param values The new 3x3 matrix values for the uniform.
+   * @return This Shader, for chaining calls.
+   * @throws IllegalArgumentException If the length of the values array is not 9 (3x3).
+   */
   public Shader setMat3(String name, float[] values) {
     if (values.length != 9) {
       throw new IllegalArgumentException("Value array length must be 9 (3x3)");
@@ -258,7 +345,13 @@ public class Shader implements Closeable {
     return this;
   }
 
-
+  /**
+   * Sets a 4x4 matrix uniform for this Shader.
+   * @param name The name of the uniform.
+   * @param values The new 4x4 matrix values for the uniform.
+   * @return This Shader, for chaining calls.
+   * @throws IllegalArgumentException If the length of the values array is not 16 (4x4).
+   */
   public Shader setMat4(String name, float[] values) {
     if (values.length != 16) {
       throw new IllegalArgumentException("Value array length must be 16 (4x4)");
@@ -267,7 +360,12 @@ public class Shader implements Closeable {
     return this;
   }
 
-
+  /**
+   * Sets a boolean array uniform for this Shader.
+   * @param name The name of the uniform.
+   * @param values The new boolean array values for the uniform.
+   * @return This Shader, for chaining calls.
+   */
   public Shader setBoolArray(String name, boolean[] values) {
     int[] intValues = new int[values.length];
     for (int i = 0; i < values.length; ++i) {
@@ -277,17 +375,35 @@ public class Shader implements Closeable {
     return this;
   }
 
-
+   /**
+   * Sets an integer array uniform for this Shader.
+   * @param name The name of the uniform.
+   * @param values The new integer array values for the uniform.
+   * @return This Shader, for chaining calls.
+   */
   public Shader setIntArray(String name, int[] values) {
     uniforms.put(getUniformLocation(name), new UniformInt(values.clone()));
     return this;
   }
 
+  /**
+   * Sets a float array uniform for this Shader.
+   * @param name The name of the uniform.
+   * @param values The new float array values for the uniform.
+   * @return This Shader, for chaining calls.
+   */
   public Shader setFloatArray(String name, float[] values) {
     uniforms.put(getUniformLocation(name), new Uniform1f(values.clone()));
     return this;
   }
 
+  /**
+   * Sets a 2D vector array uniform for this Shader.
+   * @param name The name of the uniform.
+   * @param values The new 2D vector array values for the uniform.
+   * @return This Shader, for chaining calls.
+   * @throws IllegalArgumentException If the length of the values array is not divisible by 2.
+   */
   public Shader setVec2Array(String name, float[] values) {
     if (values.length % 2 != 0) {
       throw new IllegalArgumentException("Value array length must be divisible by 2");
@@ -295,6 +411,14 @@ public class Shader implements Closeable {
     uniforms.put(getUniformLocation(name), new Uniform2f(values.clone()));
     return this;
   }
+
+  /**
+   * Sets a 3D vector array uniform for this Shader.
+   * @param name The name of the uniform.
+   * @param values The new 3D vector array values for the uniform.
+   * @return This Shader, for chaining calls.
+   * @throws IllegalArgumentException If the length of the values array is not divisible by 3.
+   */
   public Shader setVec3Array(String name, float[] values) {
     if (values.length % 3 != 0) {
       throw new IllegalArgumentException("Value array length must be divisible by 3");
@@ -303,6 +427,13 @@ public class Shader implements Closeable {
     return this;
   }
 
+  /**
+   * Sets a 4D vector array uniform for this Shader.
+   * @param name The name of the uniform.
+   * @param values The new 4D vector array values for the uniform.
+   * @return This Shader, for chaining calls.
+   * @throws IllegalArgumentException If the length of the values array is not divisible by 4.
+   */
   public Shader setVec4Array(String name, float[] values) {
     if (values.length % 4 != 0) {
       throw new IllegalArgumentException("Value array length must be divisible by 4");
@@ -311,6 +442,13 @@ public class Shader implements Closeable {
     return this;
   }
 
+  /**
+   * Sets a 2x2 matrix array uniform for this Shader.
+   * @param name The name of the uniform.
+   * @param values The new 2x2 matrix array values for the uniform.
+   * @return This Shader, for chaining calls.
+   * @throws IllegalArgumentException If the length of the values array is not divisible by 4 (2x2).
+   */
   public Shader setMat2Array(String name, float[] values) {
     if (values.length % 4 != 0) {
       throw new IllegalArgumentException("Value array length must be divisible by 4 (2x2)");
@@ -319,6 +457,13 @@ public class Shader implements Closeable {
     return this;
   }
 
+  /**
+   * Sets a 3x3 matrix array uniform for this Shader.
+   * @param name The name of the uniform.
+   * @param values The new 3x3 matrix array values for the uniform.
+   * @return This Shader, for chaining calls.
+   * @throws IllegalArgumentException If the length of the values array is not divisible by 9 (3x3).
+   */
   public Shader setMat3Array(String name, float[] values) {
     if (values.length % 9 != 0) {
       throw new IllegalArgumentException("Values array length must be divisible by 9 (3x3)");
@@ -327,6 +472,13 @@ public class Shader implements Closeable {
     return this;
   }
 
+  /**
+   * Sets a 4x4 matrix array uniform for this Shader.
+   * @param name The name of the uniform.
+   * @param values The new 4x4 matrix array values for the uniform.
+   * @return This Shader, for chaining calls.
+   * @throws IllegalArgumentException If the length of the values array is not divisible by 16 (4x4).
+   */
   public Shader setMat4Array(String name, float[] values) {
     if (values.length % 16 != 0) {
       throw new IllegalArgumentException("Value array length must be divisible by 16 (4x4)");
@@ -335,7 +487,15 @@ public class Shader implements Closeable {
     return this;
   }
 
-
+  /**
+   * Applies the shader program and sets the uniforms.
+   * If the program ID is 0, an IllegalStateException is thrown.
+   * The shader program is used, the blend mode is set, the depth write mask is set, and the depth test is enabled or disabled.
+   * All non-texture uniforms are removed from the map after setting them, since they're stored as part of the program.
+   * If a GLException occurs while setting a uniform, an IllegalArgumentException is thrown with the name of the uniform and the GLException.
+   * After all uniforms are set, the active texture is set to TEXTURE0.
+   * If a GLException occurs while setting the active texture, a warning is logged.
+   */
   public void lowLevelUse() {
     // Make active shader/set uniforms
     if (programId == 0) {
@@ -379,24 +539,46 @@ public class Shader implements Closeable {
       GLError.maybeLogGLError(Log.WARN, TAG, "Failed to set active texture", "glActiveTexture");
     }
   }
-
+   /**
+   * Interface representing a uniform to be used in a shader.
+   */
   private static interface Uniform {
+    /**
+     * Method to use the uniform at a given location.
+     * @param location The location to use the uniform at.
+     */
     public void use(int location);
   }
 
+  /**
+   * Class representing a texture uniform.
+   */
   private static class UniformTexture implements Uniform {
     private final int textureUnit;
     private final Texture texture;
 
+    /**
+     * Constructor for the UniformTexture class.
+     * @param textureUnit The texture unit for this UniformTexture.
+     * @param texture The Texture for this UniformTexture.
+     */
     public UniformTexture(int textureUnit, Texture texture) {
       this.textureUnit = textureUnit;
       this.texture = texture;
     }
 
+    /**
+     * Getter for the texture unit.
+     * @return The texture unit.
+     */
     public int getTextureUnit() {
       return textureUnit;
     }
 
+    /**
+     * Method to use the texture uniform at a given location.
+     * @param location The location to use the texture uniform at.
+     */
     @Override
     public void use(int location) {
       if (texture.getTextureId() == 0) {
@@ -411,13 +593,24 @@ public class Shader implements Closeable {
     }
   }
 
+  /**
+   * Class representing an integer uniform.
+   */
   private static class UniformInt implements Uniform {
     private final int[] values;
 
+    /**
+     * Constructor for the UniformInt class.
+     * @param values The integer values for this UniformInt.
+     */
     public UniformInt(int[] values) {
       this.values = values;
     }
 
+    /**
+     * Method to use the integer uniform at a given location.
+     * @param location The location to use the integer uniform at.
+     */
     @Override
     public void use(int location) {
       GLES30.glUniform1iv(location, values.length, values, 0);
@@ -425,13 +618,24 @@ public class Shader implements Closeable {
     }
   }
 
+  /**
+   * Class representing a float uniform.
+   */
   private static class Uniform1f implements Uniform {
     private final float[] values;
 
+    /**
+     * Constructor for the Uniform1f class.
+     * @param values The float values for this Uniform1f.
+     */
     public Uniform1f(float[] values) {
       this.values = values;
     }
 
+    /**
+     * Method to use the float uniform at a given location.
+     * @param location The location to use the float uniform at.
+     */
     @Override
     public void use(int location) {
       GLES30.glUniform1fv(location, values.length, values, 0);
@@ -439,13 +643,24 @@ public class Shader implements Closeable {
     }
   }
 
+  /**
+   * Class representing a 2D vector uniform.
+   */
   private static class Uniform2f implements Uniform {
     private final float[] values;
 
+    /**
+     * Constructor for the Uniform2f class.
+     * @param values The 2D vector values for this Uniform2f.
+     */
     public Uniform2f(float[] values) {
       this.values = values;
     }
 
+    /**
+     * Method to use the 2D vector uniform at a given location.
+     * @param location The location to use the 2D vector uniform at.
+     */
     @Override
     public void use(int location) {
       GLES30.glUniform2fv(location, values.length / 2, values, 0);
@@ -453,13 +668,24 @@ public class Shader implements Closeable {
     }
   }
 
+  /**
+   * Class representing a 3D vector uniform.
+   */
   private static class Uniform3f implements Uniform {
     private final float[] values;
 
+    /**
+     * Constructor for the Uniform3f class.
+     * @param values The 3D vector values for this Uniform3f.
+     */
     public Uniform3f(float[] values) {
       this.values = values;
     }
 
+    /**
+     * Method to use the 3D vector uniform at a given location.
+     * @param location The location to use the 3D vector uniform at.
+     */
     @Override
     public void use(int location) {
       GLES30.glUniform3fv(location, values.length / 3, values, 0);
@@ -467,13 +693,24 @@ public class Shader implements Closeable {
     }
   }
 
+  /**
+   * Class representing a 4D vector uniform.
+   */
   private static class Uniform4f implements Uniform {
     private final float[] values;
 
+    /**
+     * Constructor for the Uniform4f class.
+     * @param values The 4D vector values for this Uniform4f.
+     */
     public Uniform4f(float[] values) {
       this.values = values;
     }
 
+    /**
+     * Method to use the 4D vector uniform at a given location.
+     * @param location The location to use the 4D vector uniform at.
+     */
     @Override
     public void use(int location) {
       GLES30.glUniform4fv(location, values.length / 4, values, 0);
@@ -481,13 +718,24 @@ public class Shader implements Closeable {
     }
   }
 
+  /**
+   * Class representing a 2x2 matrix uniform.
+   */
   private static class UniformMatrix2f implements Uniform {
     private final float[] values;
 
+    /**
+     * Constructor for the UniformMatrix2f class.
+     * @param values The 2x2 matrix values for this UniformMatrix2f.
+     */
     public UniformMatrix2f(float[] values) {
       this.values = values;
     }
 
+    /**
+     * Method to use the 2x2 matrix uniform at a given location.
+     * @param location The location to use the 2x2 matrix uniform at.
+     */
     @Override
     public void use(int location) {
       GLES30.glUniformMatrix2fv(location, values.length / 4, /*transpose=*/ false, values, 0);
@@ -495,13 +743,24 @@ public class Shader implements Closeable {
     }
   }
 
+  /**
+   * Class representing a 3x3 matrix uniform.
+   */
   private static class UniformMatrix3f implements Uniform {
     private final float[] values;
 
+    /**
+     * Constructor for the UniformMatrix3f class.
+     * @param values The 3x3 matrix values for this UniformMatrix3f.
+     */
     public UniformMatrix3f(float[] values) {
       this.values = values;
     }
 
+    /**
+     * Method to use the 3x3 matrix uniform at a given location.
+     * @param location The location to use the 3x3 matrix uniform at.
+     */
     @Override
     public void use(int location) {
       GLES30.glUniformMatrix3fv(location, values.length / 9, /*transpose=*/ false, values, 0);
@@ -509,13 +768,24 @@ public class Shader implements Closeable {
     }
   }
 
+  /**
+   * Class representing a 4x4 matrix uniform.
+   */
   private static class UniformMatrix4f implements Uniform {
     private final float[] values;
 
+    /**
+     * Constructor for the UniformMatrix4f class.
+     * @param values The 4x4 matrix values for this UniformMatrix4f.
+     */
     public UniformMatrix4f(float[] values) {
       this.values = values;
     }
 
+    /**
+     * Method to use the 4x4 matrix uniform at a given location.
+     * @param location The location to use the 4x4 matrix uniform at.
+     */
     @Override
     public void use(int location) {
       GLES30.glUniformMatrix4fv(location, values.length / 16, /*transpose=*/ false, values, 0);
@@ -523,6 +793,11 @@ public class Shader implements Closeable {
     }
   }
 
+  /**
+   * Retrieves the location of a uniform variable within a shader.
+   * @param name The name of the uniform variable whose location is to be queried.
+   * @return The location of the uniform variable.
+   */
   private int getUniformLocation(String name) {
     Integer locationObject = uniformLocations.get(name);
     if (locationObject != null) {
@@ -538,6 +813,12 @@ public class Shader implements Closeable {
     return location;
   }
 
+  /**
+   * Creates a shader object of the specified type and compiles the source code strings that are loaded into it.
+   * @param type The type of shader to be created.
+   * @param code The source code of the shader.
+   * @return The shader object.
+   */
   private static int createShader(int type, String code) {
     int shaderId = GLES30.glCreateShader(type);
     GLError.maybeThrowGLException("Shader creation failed", "glCreateShader");
@@ -560,6 +841,11 @@ public class Shader implements Closeable {
     return shaderId;
   }
 
+  /**
+   * Creates a string of shader defines code from a map of defines.
+   * @param defines The map of defines.
+   * @return The string of shader defines code.
+   */
   private static String createShaderDefinesCode(Map<String, String> defines) {
     if (defines == null) {
       return "";
@@ -571,6 +857,12 @@ public class Shader implements Closeable {
     return builder.toString();
   }
 
+  /**
+   * Inserts shader defines code into the source code of a shader.
+   * @param sourceCode The source code of the shader.
+   * @param definesCode The shader defines code to be inserted.
+   * @return The source code of the shader with the shader defines code inserted.
+   */
   private static String insertShaderDefinesCode(String sourceCode, String definesCode) {
     String result =
         sourceCode.replaceAll(
@@ -582,6 +874,12 @@ public class Shader implements Closeable {
     return result;
   }
 
+  /**
+   * Converts an InputStream into a String.
+   * @param stream The InputStream to be converted.
+   * @return The String representation of the InputStream.
+   * @throws IOException If an I/O error occurs.
+   */
   private static String inputStreamToString(InputStream stream) throws IOException {
     InputStreamReader reader = new InputStreamReader(stream, UTF_8.name());
     char[] buffer = new char[1024 * 4];

@@ -1,18 +1,3 @@
-/*
- * Copyright 2021 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.novenosemestre.ai_lens.RA_Objects2.ml.common.samplerender;
 
 import android.opengl.GLES30;
@@ -25,6 +10,14 @@ import java.util.Iterator;
 import java.util.List;
 
 public class GLError {
+   /**
+   * Checks for OpenGL errors and throws a GLException if any are found.
+   * The exception message includes the reason, the API call, and the error codes.
+   *
+   * @param reason The reason for the potential GLException.
+   * @param api The API call that may have caused the GLException.
+   * @throws GLException If any OpenGL errors are found.
+   */
   public static void maybeThrowGLException(String reason, String api) {
     List<Integer> errorCodes = getGlErrors();
     if (errorCodes != null) {
@@ -32,6 +25,15 @@ public class GLError {
     }
   }
 
+  /**
+   * Checks for OpenGL errors and logs them if any are found.
+   * The log message includes the reason, the API call, and the error codes.
+   *
+   * @param priority The priority level of the log message.
+   * @param tag The tag of the log message.
+   * @param reason The reason for the potential OpenGL errors.
+   * @param api The API call that may have caused the OpenGL errors.
+   */
   public static void maybeLogGLError(int priority, String tag, String reason, String api) {
     List<Integer> errorCodes = getGlErrors();
     if (errorCodes != null) {
@@ -39,6 +41,15 @@ public class GLError {
     }
   }
 
+  /**
+   * Formats an error message for OpenGL errors.
+   * The message includes the reason, the API call, and the error codes.
+   *
+   * @param reason The reason for the OpenGL errors.
+   * @param api The API call that caused the OpenGL errors.
+   * @param errorCodes The OpenGL error codes.
+   * @return The formatted error message.
+   */
   private static String formatErrorMessage(String reason, String api, List<Integer> errorCodes) {
     StringBuilder builder = new StringBuilder(String.format("%s: %s: ", reason, api));
     Iterator<Integer> iterator = errorCodes.iterator();
@@ -52,6 +63,12 @@ public class GLError {
     return builder.toString();
   }
 
+  /**
+   * Checks for OpenGL errors and returns a list of error codes if any are found.
+   * If no errors are found, it returns null.
+   *
+   * @return A list of OpenGL error codes, or null if no errors are found.
+   */
   private static List<Integer> getGlErrors() {
     int errorCode = GLES30.glGetError();
     // Shortcut for no errors
@@ -70,5 +87,8 @@ public class GLError {
     return errorCodes;
   }
 
+  /**
+   * Private constructor to prevent instantiation of this utility class.
+   */
   private GLError() {}
-}
+  }

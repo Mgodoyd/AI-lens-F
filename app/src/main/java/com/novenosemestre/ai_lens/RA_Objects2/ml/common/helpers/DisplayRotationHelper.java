@@ -1,21 +1,5 @@
-/*
- * Copyright 2021 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.novenosemestre.ai_lens.RA_Objects2.ml.common.helpers;
 
-import android.app.Activity;
 import android.content.Context;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCharacteristics;
@@ -28,19 +12,25 @@ import android.view.WindowManager;
 
 import com.google.ar.core.Session;
 
-/**
- * Helper to track the display rotations. In particular, the 180 degree rotations are not notified
- * by the onSurfaceChanged() callback, and thus they require listening to the android display
- * events.
- */
-public final class DisplayRotationHelper implements DisplayListener {
-  private boolean viewportChanged;
-  private int viewportWidth;
-  private int viewportHeight;
-  private final Display display;
-  private final DisplayManager displayManager;
-  private final CameraManager cameraManager;
+  /**
+   * Helper to track the display rotations. In particular, the 180 degree rotations are not notified
+   * by the onSurfaceChanged() callback, and thus they require listening to the android display
+   * events.
+   */
+  public final class DisplayRotationHelper implements DisplayListener {
+    private boolean viewportChanged;
+    private int viewportWidth;
+    private int viewportHeight;
+    private final Display display;
+    private final DisplayManager displayManager;
+    private final CameraManager cameraManager;
 
+    /**
+   * Constructor for DisplayRotationHelper.
+   * Initializes the displayManager, cameraManager and display.
+   *
+   * @param context The context of the application.
+   */
   public DisplayRotationHelper(Context context) {
     displayManager = (DisplayManager) context.getSystemService(Context.DISPLAY_SERVICE);
     cameraManager = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
@@ -48,21 +38,38 @@ public final class DisplayRotationHelper implements DisplayListener {
     display = windowManager.getDefaultDisplay();
   }
 
+  /**
+   * Registers the DisplayRotationHelper as a listener for display changes.
+   */
   public void onResume() {
     displayManager.registerDisplayListener(this, null);
   }
 
+  /**
+   * Unregisters the DisplayRotationHelper as a listener for display changes.
+   */
   public void onPause() {
     displayManager.unregisterDisplayListener(this);
   }
 
-
+  /**
+   * Called when the surface changes size.
+   * Updates the viewport width, height and sets the viewportChanged flag to true.
+   *
+   * @param width The new width of the surface.
+   * @param height The new height of the surface.
+   */
   public void onSurfaceChanged(int width, int height) {
     viewportWidth = width;
     viewportHeight = height;
     viewportChanged = true;
   }
 
+  /**
+   * Updates the session's display geometry if the viewport has changed.
+   *
+   * @param session The AR session to update.
+   */
   public void updateSessionIfNeeded(Session session) {
     if (viewportChanged) {
       int displayRotation = display.getRotation();
@@ -71,6 +78,12 @@ public final class DisplayRotationHelper implements DisplayListener {
     }
   }
 
+  /**
+   * Calculates the aspect ratio of the viewport relative to the camera sensor orientation.
+   *
+   * @param cameraId The ID of the camera.
+   * @return The aspect ratio of the viewport.
+   */
   public float getCameraSensorRelativeViewportAspectRatio(String cameraId) {
     float aspectRatio;
     int cameraSensorToDisplayRotation = getCameraSensorToDisplayRotation(cameraId);
@@ -89,6 +102,12 @@ public final class DisplayRotationHelper implements DisplayListener {
     return aspectRatio;
   }
 
+  /**
+   * Calculates the rotation of the camera sensor relative to the current display orientation.
+   *
+   * @param cameraId The ID of the camera.
+   * @return The rotation of the camera sensor in degrees.
+   */
   public int getCameraSensorToDisplayRotation(String cameraId) {
     CameraCharacteristics characteristics;
     try {
@@ -107,6 +126,12 @@ public final class DisplayRotationHelper implements DisplayListener {
     return (sensorOrientation - displayOrientation + 360) % 360;
   }
 
+  /**
+   * Converts the rotation of the display from the Surface constants to degrees.
+   *
+   * @param rotation The rotation of the display.
+   * @return The rotation in degrees.
+   */
   private int toDegrees(int rotation) {
     switch (rotation) {
       case Surface.ROTATION_0:
@@ -122,12 +147,30 @@ public final class DisplayRotationHelper implements DisplayListener {
     }
   }
 
+  /**
+   * Called when a new display has been added.
+   * Currently does nothing.
+   *
+   * @param displayId The ID of the new display.
+   */
   @Override
   public void onDisplayAdded(int displayId) {}
 
+  /**
+   * Called when a display has been removed.
+   * Currently does nothing.
+   *
+   * @param displayId The ID of the removed display.
+   */
   @Override
   public void onDisplayRemoved(int displayId) {}
 
+  /**
+   * Called when a display has changed.
+   * Sets the viewportChanged flag to true.
+   *
+   * @param displayId The ID of the changed display.
+   */
   @Override
   public void onDisplayChanged(int displayId) {
     viewportChanged = true;

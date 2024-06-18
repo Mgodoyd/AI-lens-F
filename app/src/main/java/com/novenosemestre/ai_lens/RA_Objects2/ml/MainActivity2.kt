@@ -1,5 +1,3 @@
-
-
 package com.novenosemestre.ai_lens.RA_Objects2
 
 import android.os.Bundle
@@ -29,12 +27,21 @@ class MainActivity2 : AppCompatActivity() {
     lateinit var renderer: AppRenderer
     lateinit var view: MainActivityView
 
+   /**
+    * Called when the activity is being created.
+    * This function sets the content view, initializes the ARCore session helper and sets its exception callback,
+    * configures the AR session, initializes the renderer and the view, and adds them as lifecycle observers.
+    *
+    * @param savedInstanceState The saved instance state bundle.
+    */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main3)
 
+        // Initialize the ARCore session helper and set its exception callback
         arCoreSessionHelper = ARCoreSessionLifecycleHelper(this)
         arCoreSessionHelper.exceptionCallback = { exception ->
+            // Determine the error message based on the exception type
             val message = when (exception) {
                 is UnavailableArcoreNotInstalledException,
                 is UnavailableUserDeclinedInstallationException -> "Please install ARCore"
@@ -48,6 +55,7 @@ class MainActivity2 : AppCompatActivity() {
             Toast.makeText(this, message, Toast.LENGTH_LONG).show()
         }
 
+        // Configure the AR session before resuming
         arCoreSessionHelper.beforeSessionResume = { session ->
             session.configure(
                 session.config.apply {
@@ -58,6 +66,7 @@ class MainActivity2 : AppCompatActivity() {
                 }
             )
 
+            // Set the camera configuration
             val filter = CameraConfigFilter(session)
                 .setFacingDirection(CameraConfig.FacingDirection.BACK)
             val configs = session.getSupportedCameraConfigs(filter)
@@ -67,6 +76,7 @@ class MainActivity2 : AppCompatActivity() {
         }
         lifecycle.addObserver(arCoreSessionHelper)
 
+        // Initialize the renderer and the view, and add them as lifecycle observers
         renderer = AppRenderer(this)
         lifecycle.addObserver(renderer)
         view = MainActivityView(this, renderer)
@@ -75,6 +85,15 @@ class MainActivity2 : AppCompatActivity() {
         lifecycle.addObserver(view)
     }
 
+    /**
+     * Handles the result of the permission request.
+     * If the camera permission is not granted, it shows a toast message and finishes the activity.
+     * If the user has chosen not to be asked again for the permission, it launches the permission settings.
+     *
+     * @param requestCode The request code passed in requestPermissions().
+     * @param permissions The requested permissions.
+     * @param grantResults The grant results for the corresponding permissions.
+     */
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -84,6 +103,12 @@ class MainActivity2 : AppCompatActivity() {
         arCoreSessionHelper.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
+    /**
+     * Called when the window focus changes.
+     * It sets the activity to full screen if it has focus.
+     *
+     * @param hasFocus Whether the window has focus.
+     */
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
         FullScreenHelper.setFullScreenOnWindowFocusChanged(this, hasFocus)

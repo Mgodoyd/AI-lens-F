@@ -1,6 +1,5 @@
 package com.novenosemestre.ai_lens.PlacesMaps
 
-
 import android.Manifest
 import android.app.ActivityManager
 import android.content.Context
@@ -37,8 +36,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class PlacesMapsActivity : AppCompatActivity(), SensorEventListener {
-
+class PlacesMapsActivity2 : AppCompatActivity(), SensorEventListener {
     private val TAG = "PlacesMapsActivity"
 
     private lateinit var placesService: PlacesService
@@ -145,12 +143,8 @@ class PlacesMapsActivity : AppCompatActivity(), SensorEventListener {
                         .position(place.geometry.location.latLng)
                         .title(place.name)
                 )
-                if (marker != null) {
-                    marker.tag = place
-                }
-                if (marker != null) {
-                    markers.add(marker)
-                }
+                marker?.tag = place
+                markers.add(marker!!)
             }
         }
     }
@@ -172,10 +166,10 @@ class PlacesMapsActivity : AppCompatActivity(), SensorEventListener {
         }
         matchingMarker?.showInfoWindow()
     }
-   /* private fun setUpMaps() {
-        // Verificar y solicitar permisos de ubicación
-        checkLocationPermission()
-    }*/
+    /* private fun setUpMaps() {
+         // Verificar y solicitar permisos de ubicación
+         checkLocationPermission()
+     }*/
 
     private fun setUpMaps() {
         mapFragment.getMapAsync { googleMap ->
@@ -208,8 +202,6 @@ class PlacesMapsActivity : AppCompatActivity(), SensorEventListener {
         }
     }
 
-
-
     private fun getCurrentLocation(onSuccess: (Location) -> Unit) {
         if (ActivityCompat.checkSelfPermission(
                 this,
@@ -229,38 +221,39 @@ class PlacesMapsActivity : AppCompatActivity(), SensorEventListener {
         }
     }
 
-   /* private fun getCurrentLocation(onSuccess: (Location) -> Unit) {
-        fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-            currentLocation = location
-            onSuccess(location)
-        }.addOnFailureListener {
-            Log.e(TAG, "Could not get location")
-        }
-    }*/
+    /* private fun getCurrentLocation(onSuccess: (Location) -> Unit) {
+         fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+             currentLocation = location
+             onSuccess(location)
+         }.addOnFailureListener {
+             Log.e(TAG, "Could not get location")
+         }
+     }*/
 
-  /*  private fun checkLocationPermission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // El permiso ACCESS_FINE_LOCATION no está concedido, solicitarlo al usuario.
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQUEST_CODE)
-        } else {
-            // El permiso ACCESS_FINE_LOCATION está concedido, obtener la ubicación actual.
-            getCurrentLocation()
-        }
-    }
+    /*  private fun checkLocationPermission() {
+          if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+              // El permiso ACCESS_FINE_LOCATION no está concedido, solicitarlo al usuario.
+              ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQUEST_CODE)
+          } else {
+              // El permiso ACCESS_FINE_LOCATION está concedido, obtener la ubicación actual.
+              getCurrentLocation()
+          }
+      }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permiso ACCESS_FINE_LOCATION concedido, obtener la ubicación actual.
-                getCurrentLocation()
-            } else {
-                // Permiso ACCESS_FINE_LOCATION denegado, manejar este caso si es necesario.
-                // Por ejemplo, mostrar un mensaje al usuario indicando que la aplicación no puede funcionar sin permisos de ubicación.
-                Toast.makeText(this, "La aplicación no puede funcionar sin permisos de ubicación.", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }*/
+      override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+          super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+          if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+              if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                  // Permiso ACCESS_FINE_LOCATION concedido, obtener la ubicación actual.
+                  getCurrentLocation()
+              } else {
+                  // Permiso ACCESS_FINE_LOCATION denegado, manejar este caso si es necesario.
+                  // Por ejemplo, mostrar un mensaje al usuario indicando que la aplicación no puede funcionar sin permisos de ubicación.
+                  Toast.makeText(this, "La aplicación no puede funcionar sin permisos de ubicación.", Toast.LENGTH_SHORT).show()
+              }
+          }
+      }*/
+
     private fun getNearbyPlaces(location: Location) {
         val apiKey = this.getString(R.string.google_map_api_key)
         placesService.nearbyPlaces(
@@ -284,7 +277,7 @@ class PlacesMapsActivity : AppCompatActivity(), SensorEventListener {
                     }
 
                     val places = response.body()?.results ?: emptyList()
-                    this@PlacesMapsActivity.places = places
+                    this@PlacesMapsActivity2.places = places
                 }
             }
         )
@@ -325,8 +318,8 @@ class PlacesMapsActivity : AppCompatActivity(), SensorEventListener {
         )
         SensorManager.getOrientation(rotationMatrix, orientationAngles)
     }
+
+    val Location.latLng: LatLng
+        get() = LatLng(this.latitude, this.longitude)
+
 }
-
-val Location.latLng: LatLng
-    get() = LatLng(this.latitude, this.longitude)
-

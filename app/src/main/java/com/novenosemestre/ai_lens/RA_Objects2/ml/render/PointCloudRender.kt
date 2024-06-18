@@ -1,19 +1,3 @@
-/*
- * Copyright 2021 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.google.ar.core.examples.java.ml.render
 
 import com.google.ar.core.PointCloud
@@ -29,6 +13,16 @@ class PointCloudRender {
 
   var lastPointCloudTimestamp: Long = 0
 
+  /**
+   * Initializes the point cloud rendering components.
+   *
+   * This function is called when the surface is created. It initializes the shader, vertex buffer, and mesh for the point cloud.
+   * The shader is created from the vertex and fragment shaders specified in the assets. The color and point size for the point cloud are also set.
+   * The vertex buffer is created with four entries per vertex (X, Y, Z, confidence).
+   * The mesh is created with the vertex buffer and set to render points.
+   *
+   * @param render The SampleRender object for rendering.
+   */
   fun onSurfaceCreated(render: SampleRender) {
     // Point cloud
     pointCloudShader = Shader.createFromAssets(
@@ -47,6 +41,17 @@ class PointCloudRender {
     )
   }
 
+  /**
+   * Draws the point cloud.
+   *
+   * This function draws the point cloud if the timestamp of the point cloud is greater than the last timestamp.
+   * It sets the points of the vertex buffer to the points of the point cloud and updates the last timestamp.
+   * It then sets the model view projection matrix of the shader and draws the mesh.
+   *
+   * @param render The SampleRender object for rendering.
+   * @param pointCloud The PointCloud object to draw.
+   * @param modelViewProjectionMatrix The model view projection matrix.
+   */
   fun drawPointCloud(
     render: SampleRender,
     pointCloud: PointCloud,

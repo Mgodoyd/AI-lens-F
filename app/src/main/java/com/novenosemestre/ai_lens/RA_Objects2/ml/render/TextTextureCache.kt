@@ -1,19 +1,3 @@
-/*
- * Copyright 2021 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.google.ar.core.examples.java.ml.render
 
 import android.graphics.Bitmap
@@ -33,12 +17,29 @@ class TextTextureCache {
 
   private val cacheMap = mutableMapOf<String, Texture>()
 
+  /**
+   * Retrieves a texture from the cache or generates a new one if it doesn't exist.
+   *
+   * @param render The SampleRender object for rendering.
+   * @param string The string to be rendered as a texture.
+   * @return The texture corresponding to the input string.
+   */
   fun get(render: SampleRender, string: String): Texture {
     return cacheMap.computeIfAbsent(string) {
       generateTexture(render, string)
     }
   }
 
+  /**
+   * Generates a texture from a string.
+   *
+   * This function creates a new texture, generates a bitmap from the input string, and populates the texture with the bitmap data.
+   * It also generates mipmaps for the texture.
+   *
+   * @param render The SampleRender object for rendering.
+   * @param string The string to be rendered as a texture.
+   * @return The generated texture.
+   */
   private fun generateTexture(render: SampleRender, string: String): Texture {
     val texture = Texture(render, Texture.Target.TEXTURE_2D, Texture.WrapMode.CLAMP_TO_EDGE)
 
@@ -67,6 +68,7 @@ class TextTextureCache {
     return texture
   }
 
+  // Paint object for rendering the text in the texture.
   val textPaint = Paint().apply {
     textSize = 26f
     setARGB(0xff, 0xea, 0x43, 0x35)
@@ -77,11 +79,21 @@ class TextTextureCache {
     strokeWidth = 2f
   }
 
+  // Paint object for rendering the stroke of the text in the texture.
   val strokePaint = Paint(textPaint).apply {
     setARGB(0xff, 0x00, 0x00, 0x00)
     style = Paint.Style.STROKE
   }
 
+  /**
+   * Generates a bitmap from a string.
+   *
+   * This function creates a new bitmap, sets its color to transparent, and draws the input string onto it.
+   * The string is drawn twice: once for the stroke and once for the text itself.
+   *
+   * @param string The string to be rendered as a bitmap.
+   * @return The generated bitmap.
+   */
   private fun generateBitmapFromString(string: String): Bitmap {
     val w = 256
     val h = 256

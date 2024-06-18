@@ -2,12 +2,15 @@ package com.novenosemestre.ai_lens.ImageSearchHandler
 
 class listSitesSearch {
 
+    /**
+     * A list of e-commerce sites to be used for image search.
+     */
     val ecommerceSites =
         listOf(
 
             //technological
             "amazon.com",
-          //  "ebay.com",
+          // "ebay.com",
             "bestbuy.com",
             /*"Newegg.com",
             "bhphotovideo.com",
@@ -20,7 +23,7 @@ class listSitesSearch {
             "apple.com",
 
             //office
-          /*  "officedepot.com",
+          /*"officedepot.com",
             "staples.com",
             "wayfair.com",
             "furniture.ca",
@@ -31,10 +34,10 @@ class listSitesSearch {
 
 
             //school
-          //  "walmart.com",
+            //"walmart.com",
 
             //clothes
-         /*   "us.shein.com",
+         /* "us.shein.com",
             "asos.com",
             "zara.com",
             "hm.com",

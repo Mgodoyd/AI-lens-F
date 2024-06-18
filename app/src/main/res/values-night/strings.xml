@@ -17,4 +17,5 @@
     <string name="use_cloud_ml">use_cloud_ml</string>
     <string name="scan">scan</string>
     <string name="places">Places</string>
+    <string name="test">TEST</string>
 </resources>
