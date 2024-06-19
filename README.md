@@ -55,7 +55,7 @@ AI Lens is a mobile application designed to:
 - **Location display**: Shows the user's location on a map.
 - **Contextual AR**: Overlay location in augmented reality to improve navigation and interaction.
 
-<img src="images/maps.png" alt="ai-lens" width="200"/>
+<img src="images/maps2.jpg" alt="ai-lens" width="200"/>
 
 ## Used technology
 
