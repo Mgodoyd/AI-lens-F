@@ -59,19 +59,24 @@ AI Lens is a mobile application designed to:
 
 ## Used technology
 
-- **TensorFlow Lite**: For the object detection model and inference on mobile devices.
-- **Google AI Vertex**: For training machine learning models.
-- **Google Maps API**: For the integration of maps and AR functionality.
+- **TensorFlow Lite**: For the object detection model and inference on mobile devices.   
+- **Google AI Vertex**: For training machine learning models.              [Google Cloud](https://console.cloud.google.com/vertex-ai?referrer=search&project=marine-balm-424004-g6)
+- **Google Maps**: For the integration of maps and AR functionality.
 - **Android**: Mobile platform for the implementation of the application.
-- **Programmable Search Engine**: A customizable search engine that allows users to create and control their own web search experience.
+- **Programmable Search Engine**: A customizable search engine that allows users to create and control their own web search experience.   [Search Engine](https://programmablesearchengine.google.com/)
 
-## Instalación
+## Installation
 
-1. Clona este repositorio.
-2. Instala las dependencias necesarias usando `gradle` o `maven`.
-3. Configura las APIs de Google necesarias para Maps y AI Vertex.
+1. Clone this repository.
+2. Install the necessary dependencies using `gradle`.
+3. Configure the necessary Google APIs for Maps and AI Vertex.
 
-## Contribuir
+    - ***Cloud Vision API***
+    - ***Custom Search API***
+    - ***Vertex AI API***
+    - ***Maps SDK for Android***
+    - ***Places API***
 
-Las contribuciones son bienvenidas. Para contribuir, sigue los pasos para clonar el repositorio y realiza un pull request.
+## Contribute ⚡
 
+Contributions are welcome. To contribute, follow the steps to clone the repository and make a pull request. 🚀
