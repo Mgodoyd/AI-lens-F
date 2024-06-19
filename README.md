@@ -50,18 +50,20 @@ AI Lens is a mobile application designed to:
      <img src="images/ra2.png" alt="ai-lens" width="200"/>
    </div>
    
-
 ### 2.4 Google Maps
 
-- **Visualización de ubicación**: Muestra la ubicación del usuario en un mapa.
-- **AR contextual**: Superpone la ubicación en realidad aumentada para mejorar la navegación y la interacción.
+- **Location display**: Shows the user's location on a map.
+- **Contextual AR**: Overlay location in augmented reality to improve navigation and interaction.
 
-## Tecnologías Utilizadas
+<img src="images/maps.png" alt="ai-lens" width="200"/>
 
-- **TensorFlow Lite**: Para el modelo de detección de objetos y la inferencia en dispositivos móviles.
-- **Google AI Vertex**: Para el entrenamiento de modelos de aprendizaje automático.
-- **Google Maps API**: Para la integración de mapas y funcionalidad de AR.
-- **Android**: Plataforma móvil para la implementación de la aplicación.
+## Used technology
+
+- **TensorFlow Lite**: For the object detection model and inference on mobile devices.
+- **Google AI Vertex**: For training machine learning models.
+- **Google Maps API**: For the integration of maps and AR functionality.
+- **Android**: Mobile platform for the implementation of the application.
+- **Programmable Search Engine**: A customizable search engine that allows users to create and control their own web search experience.
 
 ## Instalación
 
