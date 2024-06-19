@@ -35,15 +35,21 @@ AI Lens is a mobile application designed to:
 - **Object-based results**: Uses object detection to suggest products similar to those identified.
 - **Integration with online search services**: Make it easy to find relevant products using search engines.
   
-   <h2> Image upload </h2>
-    <img src="images/galery3.png" alt="ai-lens" width="200"/>
-   <h2> Photo capture </h2>
-    <img src="images/picture3.png" alt="ai-lens" width="200"/>
+   <div style="display: flex;">
+     <img src="images/galery3.png" alt="ai-lens" width="200"/>
+     <img src="images/picture3.png" alt="ai-lens" width="200"/>
+   </div>
+   
+### 2.3 Augmented Reality (AR)
 
-### 2.3 Realidad Aumentada (AR)
+- **Real time view**: Shows the names of detected objects overlaid on the camera view.
+- **Intuitive interaction**: Allows the user to explore detected objects with augmented reality.
 
-- **Vista en tiempo real**: Muestra los nombres de los objetos detectados superpuestos en la vista de la cámara.
-- **Interacción intuitiva**: Permite al usuario explorar los objetos detectados con realidad aumentada.
+   <div style="display: flex;">
+     <img src="images/ra.png" alt="ai-lens" width="200"/>
+     <img src="images/ra2.png" alt="ai-lens" width="200"/>
+   </div>
+   
 
 ### 2.4 Google Maps
 
