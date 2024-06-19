@@ -19,8 +19,18 @@ AI Lens is a mobile application designed to:
 
 - **Image upload**: Allows the user to upload an image from the gallery for object detection.
 - **Photo capture**: Allows the user to take a photo using the camera to detect objects in real time.
+- 
+<div style="display: flex;">
+ <img src="images/galery.png" alt="ai-lens" width="200"/>
+ <img src="images/galery2.png" alt="ai-lens" width="200"/>
+ <img src="images/galery3.png" alt="ai-lens" width="200"/>
+</div>
 
-
+<div style="display: flex;">
+ <img src="images/picture.png" alt="ai-lens" width="200"/>
+ <img src="images/picture2.png" alt="ai-lens" width="200"/>
+ <img src="images/picture3.png" alt="ai-lens" width="200"/>
+</div>
   
 ### 2.2 Búsqueda de Productos
 
