@@ -77,6 +77,30 @@ AI Lens is a mobile application designed to:
     - ***Maps SDK for Android***
     - ***Places API***
 
+Location where the credential.json file should be placed
+
+```javascript
+ path : res/raw/credential.json
+
+Credential structure example:
+
+{
+  "type": "service_account",
+  "project_id": "xxxxxxxxxxxx",
+  "private_key_id": "xxxxxxxxxxxxxx",
+  "private_key": "-----BEGIN PRIVATE KEY-----\xxxxx\n-----END PRIVATE KEY-----\n",
+  "client_email": "xxxxxxxxxx.iam.gserviceaccount.com",
+  "client_id": "xxxxxxxxxxxxxxx",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
+
+```
+
+
 ## Contribute ⚡
 
 Contributions are welcome. To contribute, follow the steps to clone the repository and make a pull request. 🚀
